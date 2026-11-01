@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { BRAND } from '../config/branding';
 import { useAuth } from '../context/AuthContext';
 import { getRoleLabel } from '../lib/api';
 
@@ -48,10 +49,10 @@ export function Navbar() {
             </div>
             <div>
               <span className="block text-base font-bold tracking-tight text-slate-900">
-                TeleMed <span className="text-teal-700">DICOM</span>
+                {BRAND.appName} <span className="text-teal-700">{BRAND.appHighlight}</span>
               </span>
               <span className="block text-[11px] font-medium text-slate-500">
-                Diagnóstico Médico a Distancia
+                {BRAND.tagline}
               </span>
             </div>
           </Link>

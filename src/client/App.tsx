@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
+import { BRAND } from './config/branding';
 import { AuthProvider } from './context/AuthContext';
 import { DicomGuidePage } from './pages/DicomGuidePage';
 import { LandingPage } from './pages/LandingPage';
@@ -30,8 +31,7 @@ export function App() {
           </main>
           <footer className="no-print border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
             <div className="mx-auto max-w-7xl px-4">
-              TeleMed DICOM · Plataforma de Diagnóstico Médico a Distancia (Estándar ISO 12052 / NEMA
-              PS3) · Materia: Telemedicina
+              {BRAND.appName} {BRAND.appHighlight} · {BRAND.institutionLabel}
             </div>
           </footer>
         </div>

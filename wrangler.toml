@@ -9,7 +9,7 @@ binding = "ASSETS"
 [[d1_databases]]
 binding = "DB"
 database_name = "telemedicina-dicom-db"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "8dc8500d-967d-4ce5-aed2-1045b068a960"
 
 # Optional Cloudflare R2 binding: when enabled in your Cloudflare account,
 # uncomment the block below so binary DICOM files store directly in R2.
