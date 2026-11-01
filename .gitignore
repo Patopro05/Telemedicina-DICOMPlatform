@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js / Build outputs
+.next/
+out/
+dist/
+build/
+.open-next/
+.wrangler/
+.vercel/
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+
+# Local storage & SQLite dev databases
+.local-data/
+*.sqlite
+*.sqlite-journal
+*.db
+
+# Environment variables
+.env
+.env*.local
+.dev.vars
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+next-env.d.ts
