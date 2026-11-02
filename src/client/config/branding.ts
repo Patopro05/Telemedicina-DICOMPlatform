@@ -1,33 +1,48 @@
 /**
- * Centralized Branding & Visual Identity Configuration
+ * Centralized Branding & Visual Identity Configuration for ImaRis
  *
- * When your team decides on final names, logos, fonts, or institutional labels,
- * update this single file to change branding across the entire web application.
+ * Palette:
+ * - Olive Primary (#517327): Overall cover of all areas, tabs, nav headers, accents
+ * - Olive Accent (#617E3C): Secondary headers, active highlights, badges
+ * - Action Blue (#3B5CA8): Primary action buttons, accepting, allow, positive CTAs
+ * - Action Blue Hover (#5A75BC): Hover state for action buttons
+ * - Alert Red (#9C3B47): Critical alerts, STAT emergency badges, trouble warnings
  */
 
 export interface BrandConfig {
-  /** The main name of the platform (e.g. "TeleMed DICOM" or future team chosen name) */
   appName: string;
-  /** Primary accent highlight word (e.g. "DICOM") */
   appHighlight: string;
-  /** Short descriptive tagline */
   tagline: string;
-  /** Subtitle shown under main headings */
   subtitle: string;
-  /** Course / Institution descriptor for footers and formal headers */
   institutionLabel: string;
-  /** Support contact or university email */
   contactEmail: string;
-  /** Version indicator */
   version: string;
+  logoHeartPath: string;
+  logoFullPath: string;
+  palette: {
+    olivePrimary: string;
+    oliveSecondary: string;
+    actionBlue: string;
+    actionBlueHover: string;
+    alertRed: string;
+  };
 }
 
 export const BRAND: BrandConfig = {
-  appName: 'TeleMed',
+  appName: 'ImaRis',
   appHighlight: 'DICOM',
-  tagline: 'Diagnóstico Médico a Distancia',
-  subtitle: 'Plataforma Web de Teleradiología y Consulta Especializada de Imagen Médica',
-  institutionLabel: 'Materia: Telemedicina · Proyecto de Diagnóstico Remoto (ISO 12052 / NEMA PS3)',
-  contactEmail: 'contacto@telemed.mx',
-  version: '1.0.0 (Producción Cloudflare)',
+  tagline: 'Plataforma Web de Teleradiología y Diagnóstico Remoto',
+  subtitle: 'Carga, Consulta Especializada y Emisión de Diagnósticos Remotos de Imagen Médica (ISO 12052 / NEMA PS3)',
+  institutionLabel: 'Materia: Telemedicina · Proyecto Clínico de Diagnóstico Remoto',
+  contactEmail: 'contacto@imaris.mx',
+  version: '1.2.0 (Producción Cloudflare)',
+  logoHeartPath: '/imaris_heart.svg',
+  logoFullPath: '/imaris_logo.svg',
+  palette: {
+    olivePrimary: '#517327',
+    oliveSecondary: '#617E3C',
+    actionBlue: '#3B5CA8',
+    actionBlueHover: '#5A75BC',
+    alertRed: '#9C3B47',
+  },
 };

@@ -1244,6 +1244,461 @@ app.post('/api/studies/:id/diagnosis', async (c) => {
   return c.json({ ok: true });
 });
 
+// ---------------------------------------------------------------------------
+// DICOMweb Endpoints (NEMA PS3.18 / ISO 12052 Standards: QIDO-RS, WADO-RS, STOW-RS)
+// ---------------------------------------------------------------------------
+
+// 1. QIDO-RS: Query studies
+app.get('/api/dicomweb/studies', async (c) => {
+  await ensureDatabaseInitialized(c.env);
+  const patientNameFilter = (c.req.query('PatientName') ?? '').toLowerCase();
+  const patientIdFilter = (c.req.query('PatientID') ?? '').toLowerCase();
+  const modalityFilter = c.req.query('ModalitiesInStudy') ?? c.req.query('modality');
+  const accessionFilter = c.req.query('AccessionNumber') ?? '';
+  const studyUidFilter = c.req.query('StudyInstanceUID') ?? '';
+
+  const conditions: string[] = [];
+  const binds: unknown[] = [];
+
+  if (patientNameFilter) {
+    conditions.push('LOWER(patient_name) LIKE ?');
+    binds.push(`%${patientNameFilter}%`);
+  }
+  if (patientIdFilter) {
+    conditions.push('LOWER(patient_identifier) LIKE ?');
+    binds.push(`%${patientIdFilter}%`);
+  }
+  if (modalityFilter && modalityFilter !== 'ALL') {
+    conditions.push('modality = ?');
+    binds.push(modalityFilter);
+  }
+  if (accessionFilter) {
+    conditions.push('accession_number = ?');
+    binds.push(accessionFilter);
+  }
+  if (studyUidFilter) {
+    conditions.push('study_instance_uid = ?');
+    binds.push(studyUidFilter);
+  }
+
+  const whereSql = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+  const rows = await c.env.DB.prepare(
+    `SELECT * FROM studies ${whereSql} ORDER BY created_at DESC LIMIT 50`
+  )
+    .bind(...binds)
+    .all<{
+      id: string;
+      accession_number: string;
+      patient_name: string;
+      patient_identifier: string;
+      patient_birth_date: string | null;
+      patient_sex: string | null;
+      modality: string;
+      body_part: string;
+      study_date: string;
+      study_instance_uid: string | null;
+      clinical_indication: string;
+      total_files: number;
+    }>();
+
+  // Return standard DICOM JSON model (PS3.18 Section F.1)
+  const dicomJson = (rows.results ?? []).map((s) => {
+    const studyUid = s.study_instance_uid || `1.2.826.0.1.3680043.2.1125.1.${s.id.replace(/-/g, '').slice(0, 16)}`;
+    const studyDateClean = (s.study_date || '').replace(/[^0-9]/g, '');
+    return {
+      '00080005': { vr: 'CS', Value: ['ISO_IR 192'] },
+      '00080020': { vr: 'DA', Value: [studyDateClean || '20261101'] },
+      '00080030': { vr: 'TM', Value: ['120000'] },
+      '00080050': { vr: 'SH', Value: [s.accession_number] },
+      '00080060': { vr: 'CS', Value: [s.modality] },
+      '00081030': { vr: 'LO', Value: [s.clinical_indication || s.body_part] },
+      '00100010': { vr: 'PN', Value: [{ Alphabetic: s.patient_name }] },
+      '00100020': { vr: 'LO', Value: [s.patient_identifier] },
+      '00100030': { vr: 'DA', Value: [(s.patient_birth_date || '').replace(/[^0-9]/g, '')] },
+      '00100040': { vr: 'CS', Value: [s.patient_sex || 'O'] },
+      '0020000D': { vr: 'UI', Value: [studyUid] },
+      '00201208': { vr: 'IS', Value: [Number(s.total_files)] },
+      studyInstanceUid: studyUid,
+      accessionNumber: s.accession_number,
+      patientName: s.patient_name,
+      patientId: s.patient_identifier,
+      modality: s.modality,
+    };
+  });
+
+  return c.json(dicomJson, 200, {
+    'Content-Type': 'application/dicom+json',
+  });
+});
+
+// 2. WADO-RS: Retrieve Study Summary
+app.get('/api/dicomweb/studies/:studyInstanceUid', async (c) => {
+  await ensureDatabaseInitialized(c.env);
+  const studyUid = c.req.param('studyInstanceUid');
+  const study = await c.env.DB.prepare(
+    'SELECT * FROM studies WHERE study_instance_uid = ?1 OR id = ?1 OR accession_number = ?1'
+  )
+    .bind(studyUid)
+    .first<{
+      id: string;
+      study_instance_uid: string | null;
+      accession_number: string;
+      patient_name: string;
+      patient_identifier: string;
+      modality: string;
+      total_files: number;
+    }>();
+
+  if (!study) {
+    return c.json({ error: 'Estudio DICOMweb no encontrado.' }, 404);
+  }
+
+  const files = await c.env.DB.prepare(
+    'SELECT id, filename, file_size, sop_instance_uid, series_instance_uid, instance_number FROM study_files WHERE study_id = ?1 ORDER BY instance_number ASC'
+  )
+    .bind(study.id)
+    .all<{
+      id: string;
+      filename: string;
+      file_size: number;
+      sop_instance_uid: string | null;
+      series_instance_uid: string | null;
+      instance_number: number;
+    }>();
+
+  return c.json({
+    studyInstanceUid: study.study_instance_uid || studyUid,
+    accessionNumber: study.accession_number,
+    patientName: study.patient_name,
+    patientId: study.patient_identifier,
+    modality: study.modality,
+    totalInstances: study.total_files,
+    instances: (files.results ?? []).map((f) => ({
+      sopInstanceUid: f.sop_instance_uid || f.id,
+      seriesInstanceUid: f.series_instance_uid || `${study.study_instance_uid || studyUid}.1`,
+      instanceNumber: f.instance_number,
+      filename: f.filename,
+      sizeBytes: f.file_size,
+      wadoUri: `/api/dicomweb/studies/${study.study_instance_uid || studyUid}/series/${f.series_instance_uid || `${study.study_instance_uid || studyUid}.1`}/instances/${f.sop_instance_uid || f.id}`,
+    })),
+  });
+});
+
+// 3. WADO-RS: Retrieve Study Metadata (DICOM JSON Model)
+app.get('/api/dicomweb/studies/:studyInstanceUid/metadata', async (c) => {
+  await ensureDatabaseInitialized(c.env);
+  const studyUid = c.req.param('studyInstanceUid');
+  const study = await c.env.DB.prepare(
+    'SELECT id, study_instance_uid, patient_name, patient_identifier, modality, study_date FROM studies WHERE study_instance_uid = ?1 OR id = ?1 OR accession_number = ?1'
+  )
+    .bind(studyUid)
+    .first<{
+      id: string;
+      study_instance_uid: string | null;
+      patient_name: string;
+      patient_identifier: string;
+      modality: string;
+      study_date: string;
+    }>();
+
+  if (!study) {
+    return c.json({ error: 'Estudio no encontrado.' }, 404);
+  }
+
+  const files = await c.env.DB.prepare(
+    'SELECT * FROM study_files WHERE study_id = ?1 ORDER BY instance_number ASC'
+  )
+    .bind(study.id)
+    .all<{
+      id: string;
+      sop_instance_uid: string | null;
+      series_instance_uid: string | null;
+      instance_number: number;
+      rows: number | null;
+      columns: number | null;
+      bits_allocated: number | null;
+      window_center: number | null;
+      window_width: number | null;
+      transfer_syntax_uid: string | null;
+      photometric_interpretation: string | null;
+      metadata_json: string | null;
+    }>();
+
+  const metadataList = (files.results ?? []).map((f) => {
+    const sUid = study.study_instance_uid || studyUid;
+    const seriesUid = f.series_instance_uid || `${sUid}.1`;
+    const sopUid = f.sop_instance_uid || f.id;
+    return {
+      '00080016': { vr: 'UI', Value: ['1.2.840.10008.5.1.4.1.1.2'] },
+      '00080018': { vr: 'UI', Value: [sopUid] },
+      '0020000D': { vr: 'UI', Value: [sUid] },
+      '0020000E': { vr: 'UI', Value: [seriesUid] },
+      '00200013': { vr: 'IS', Value: [f.instance_number] },
+      '00100010': { vr: 'PN', Value: [{ Alphabetic: study.patient_name }] },
+      '00100020': { vr: 'LO', Value: [study.patient_identifier] },
+      '00080060': { vr: 'CS', Value: [study.modality] },
+      '00280010': { vr: 'US', Value: [f.rows || 512] },
+      '00280011': { vr: 'US', Value: [f.columns || 512] },
+      '00280100': { vr: 'US', Value: [f.bits_allocated || 16] },
+      '00280004': { vr: 'CS', Value: [f.photometric_interpretation || 'MONOCHROME2'] },
+    };
+  });
+
+  return c.json(metadataList, 200, {
+    'Content-Type': 'application/dicom+json',
+  });
+});
+
+// 4. WADO-RS: Retrieve Instance as application/dicom binary
+app.get(
+  '/api/dicomweb/studies/:studyInstanceUid/series/:seriesInstanceUid/instances/:sopInstanceUid',
+  async (c) => {
+    await ensureDatabaseInitialized(c.env);
+    const studyUid = c.req.param('studyInstanceUid');
+    const sopUid = c.req.param('sopInstanceUid');
+
+    const file = await c.env.DB.prepare(
+      `SELECT sf.*, s.accession_number
+       FROM study_files sf
+       JOIN studies s ON s.id = sf.study_id
+       WHERE (sf.sop_instance_uid = ?1 OR sf.id = ?1)
+         AND (s.study_instance_uid = ?2 OR s.id = ?2 OR s.accession_number = ?2)`
+    )
+      .bind(sopUid, studyUid)
+      .first<{
+        id: string;
+        filename: string;
+        storage_backend: 'r2' | 'd1_chunks';
+        storage_key: string;
+        sop_instance_uid: string | null;
+        accession_number: string;
+      }>();
+
+    if (!file) {
+      return c.json({ error: 'Instancia DICOM no encontrada en el repositorio WADO-RS.' }, 404);
+    }
+
+    const bytes = await loadDicomBinary(c.env, file.id, file.storage_backend, file.storage_key);
+    if (!bytes) {
+      return c.json({ error: 'El archivo binario no está disponible en el almacenamiento.' }, 404);
+    }
+
+    const responseBuffer = bytes.buffer.slice(
+      bytes.byteOffset,
+      bytes.byteOffset + bytes.byteLength
+    ) as ArrayBuffer;
+
+    return new Response(responseBuffer, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/dicom',
+        'Content-Disposition': `inline; filename="${file.filename || (file.sop_instance_uid || sopUid) + '.dcm'}"`,
+        'X-Content-Type-Options': 'nosniff',
+      },
+    });
+  }
+);
+
+// 5. STOW-RS: Store Instances over the web (PS3.18 Section 10.5)
+app.post('/api/dicomweb/studies', async (c) => {
+  await ensureDatabaseInitialized(c.env);
+  const rawArray = await c.req.arrayBuffer();
+  if (rawArray.byteLength < 132) {
+    return c.json({ error: 'El cuerpo de la petición STOW-RS es demasiado pequeño.' }, 400);
+  }
+
+  let fileBytes = new Uint8Array(rawArray);
+  // Check if multipart wrapper or preamble offset exists
+  if (fileBytes.byteLength > 132) {
+    const isStandard =
+      fileBytes[128] === 0x44 &&
+      fileBytes[129] === 0x49 &&
+      fileBytes[130] === 0x43 &&
+      fileBytes[131] === 0x4d;
+    if (!isStandard) {
+      for (let i = 128; i < Math.min(fileBytes.length - 4, 4096); i++) {
+        if (
+          fileBytes[i] === 0x44 &&
+          fileBytes[i + 1] === 0x49 &&
+          fileBytes[i + 2] === 0x43 &&
+          fileBytes[i + 3] === 0x4d
+        ) {
+          fileBytes = fileBytes.subarray(i - 128);
+          break;
+        }
+      }
+    }
+  }
+
+  let parsed;
+  try {
+    parsed = parseDicomBytes(fileBytes);
+  } catch (err) {
+    return c.json(
+      {
+        error:
+          err instanceof Error
+            ? err.message
+            : 'Error decodificando el archivo DICOM en STOW-RS.',
+      },
+      400
+    );
+  }
+
+  const meta = parsed.metadata;
+  const checksum = await sha256Hex(fileBytes);
+  const now = new Date().toISOString();
+
+  // Resolve uploader: authenticated user, or fallback demo clinic account
+  const authUser = c.get('user');
+  let uploaderUserId = authUser?.id;
+  if (!uploaderUserId) {
+    const clinicUser = await c.env.DB.prepare(
+      "SELECT id FROM users WHERE role = 'clinic' ORDER BY created_at ASC LIMIT 1"
+    ).first<{ id: string }>();
+    uploaderUserId = clinicUser?.id || 'usr-demo-clinic-01';
+  }
+
+  const studyInstanceUid =
+    meta.studyInstanceUid || `1.2.826.0.1.3680043.2.1125.1.${Date.now()}`;
+  const seriesInstanceUid =
+    meta.seriesInstanceUid || `${studyInstanceUid}.1`;
+  const sopInstanceUid =
+    meta.sopInstanceUid || `${seriesInstanceUid}.${Date.now().toString().slice(-6)}`;
+
+  // Find or create study record
+  let existingStudy = await c.env.DB.prepare(
+    'SELECT id, accession_number FROM studies WHERE study_instance_uid = ?1'
+  )
+    .bind(studyInstanceUid)
+    .first<{ id: string; accession_number: string }>();
+
+  let studyId: string;
+  let accessionNumber: string;
+
+  if (existingStudy) {
+    studyId = existingStudy.id;
+    accessionNumber = existingStudy.accession_number;
+  } else {
+    studyId = crypto.randomUUID();
+    accessionNumber = generateAccessionNumber();
+    const patientName = meta.patientName || 'PACIENTE^DICOMWEB';
+    const patientIdentifier = meta.patientId || `ID-${Date.now().toString().slice(-6)}`;
+    const modality = (meta.modality as DicomModality) || 'CT';
+    const bodyPart = meta.bodyPartExamined || 'Región General';
+    const studyDate = meta.studyDate || now.slice(0, 10);
+    const indication = meta.studyDescription || `Estudio DICOMweb recibido vía STOW-RS (${modality})`;
+
+    await c.env.DB.prepare(
+      `INSERT INTO studies (
+        id, accession_number, uploaded_by_user_id, patient_user_id, patient_email,
+        patient_name, patient_identifier, patient_birth_date, patient_sex,
+        modality, body_part, study_date, study_instance_uid, priority, status,
+        clinical_indication, origin_institution, is_anonymized, total_files, total_bytes,
+        created_at, updated_at
+      ) VALUES (?1, ?2, ?3, NULL, NULL, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, 'routine', 'pending', ?12, ?13, 0, 0, 0, ?14, ?14)`
+    )
+      .bind(
+        studyId,
+        accessionNumber,
+        uploaderUserId,
+        patientName,
+        patientIdentifier,
+        meta.patientBirthDate || null,
+        meta.patientSex || null,
+        modality,
+        bodyPart,
+        studyDate,
+        studyInstanceUid,
+        indication,
+        meta.institutionName || 'PACS / DICOMweb Gateway',
+        now
+      )
+      .run();
+  }
+
+  const fileId = crypto.randomUUID();
+  const filename = `${sopInstanceUid}.dcm`;
+  const location = resolveDicomStorageLocation(c.env, studyId, fileId, filename);
+
+  await c.env.DB.batch([
+    c.env.DB.prepare(
+      `INSERT INTO study_files (
+        id, study_id, filename, file_size, sha256, storage_backend, storage_key,
+        sop_instance_uid, series_instance_uid, instance_number, rows, columns,
+        bits_allocated, window_center, window_width, rescale_slope, rescale_intercept,
+        photometric_interpretation, transfer_syntax_uid, metadata_json, created_at
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)`
+    ).bind(
+      fileId,
+      studyId,
+      filename,
+      fileBytes.byteLength,
+      checksum,
+      location.backend,
+      location.storageKey,
+      sopInstanceUid,
+      seriesInstanceUid,
+      meta.instanceNumber || 1,
+      meta.rows,
+      meta.columns,
+      meta.bitsAllocated,
+      meta.windowCenter,
+      meta.windowWidth,
+      meta.rescaleSlope,
+      meta.rescaleIntercept,
+      meta.photometricInterpretation,
+      meta.transferSyntaxUid,
+      JSON.stringify(meta.tags),
+      now
+    ),
+    c.env.DB.prepare(
+      `UPDATE studies
+       SET total_files = total_files + 1,
+           total_bytes = total_bytes + ?1,
+           updated_at = ?2
+       WHERE id = ?3`
+    ).bind(fileBytes.byteLength, now, studyId),
+  ]);
+
+  await saveDicomBinary(c.env, fileId, location, fileBytes);
+
+  await logAuditEvent(
+    c.env.DB,
+    authUser ?? null,
+    'DICOMWEB_STOW_RS',
+    studyId,
+    `Instancia DICOMweb almacenada vía STOW-RS: SOP ${sopInstanceUid} (${(fileBytes.byteLength / 1024).toFixed(1)} KB)`
+  );
+
+  const retrieveUrl = `/api/dicomweb/studies/${studyInstanceUid}/series/${seriesInstanceUid}/instances/${sopInstanceUid}`;
+
+  // Standard DICOMweb STOW-RS Response Model (PS3.18 Section 10.5.3)
+  return c.json(
+    {
+      '00081199': {
+        vr: 'SQ',
+        Value: [
+          {
+            '00081150': { vr: 'UI', Value: [meta.transferSyntaxUid || '1.2.840.10008.5.1.4.1.1.2'] },
+            '00081155': { vr: 'UI', Value: [sopInstanceUid] },
+            '00081190': { vr: 'UR', Value: [retrieveUrl] },
+          },
+        ],
+      },
+      studyInstanceUid,
+      seriesInstanceUid,
+      sopInstanceUid,
+      accessionNumber,
+      studyId,
+      fileId,
+      retrieveUrl,
+    },
+    201,
+    { 'Content-Type': 'application/dicom+json' }
+  );
+});
+
 // Serve static SPA bundle and fallback client-side routes to /index.html
 app.all('*', async (c) => {
   if (!c.env.ASSETS) {

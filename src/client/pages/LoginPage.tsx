@@ -17,7 +17,7 @@ const DEMO_ACCOUNTS = [
     email: 'paciente@telemed.mx',
     description: 'Cargar estudios propios y consultar diagnósticos emitidos.',
     icon: User,
-    accent: 'border-teal-200 hover:border-teal-500 bg-teal-50/40',
+    accent: 'border-[#517327]/30 hover:border-[#517327] bg-[#517327]/5',
   },
   {
     roleLabel: 'Clínica / Hospital',
@@ -25,7 +25,7 @@ const DEMO_ACCOUNTS = [
     email: 'clinica@telemed.mx',
     description: 'Cargar series TAC/RM de pacientes con prioridad clínica.',
     icon: Building2,
-    accent: 'border-sky-200 hover:border-sky-500 bg-sky-50/40',
+    accent: 'border-[#617E3C]/30 hover:border-[#617E3C] bg-[#617E3C]/5',
   },
   {
     roleLabel: 'Médico Especialista',
@@ -33,7 +33,7 @@ const DEMO_ACCOUNTS = [
     email: 'especialista@telemed.mx',
     description: 'Pestaña de descarga DICOM (.dcm/.zip), visor HU y firma de diagnóstico.',
     icon: Stethoscope,
-    accent: 'border-indigo-200 hover:border-indigo-500 bg-indigo-50/40',
+    accent: 'border-[#3B5CA8]/30 hover:border-[#3B5CA8] bg-[#3B5CA8]/5',
   },
 ];
 
@@ -85,20 +85,22 @@ export function LoginPage() {
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="grid gap-8 lg:grid-cols-12">
         {/* Standard Credentials Login */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:col-span-6">
+        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs sm:p-8 lg:col-span-6">
           <div className="mb-6">
-            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-800">
-              <KeyRound className="h-5 w-5" />
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#517327]/10 p-2 text-[#517327]">
+              <img src="/imaris_heart.svg" alt="ImaRis Icon" className="h-full w-full object-contain" />
             </div>
-            <h1 className="mt-3 text-2xl font-bold text-slate-900">Acceso a la Plataforma</h1>
-            <p className="mt-1 text-sm text-slate-600">
+            <h1 className="mt-3 text-2xl font-bold text-slate-900">
+              Acceso a <span className="text-[#517327]">ImaRis</span>
+            </h1>
+            <p className="mt-1 text-xs text-slate-600">
               Ingrese con su correo electrónico y contraseña según su perfil clínico asignado.
             </p>
           </div>
 
           {error && (
-            <div className="mb-4 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs font-medium text-red-800">
-              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+            <div className="mb-4 flex items-start gap-2 rounded-xl border border-[#9C3B47]/30 bg-[#9C3B47]/10 p-3.5 text-xs font-semibold text-[#9C3B47]">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#9C3B47]" />
               <span>{error}</span>
             </div>
           )}
@@ -114,7 +116,7 @@ export function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="usuario@institucion.mx"
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-[#3B5CA8] focus:ring-2 focus:ring-[#3B5CA8]/15 focus:outline-none"
               />
             </div>
 
@@ -126,14 +128,14 @@ export function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-[#3B5CA8] focus:ring-2 focus:ring-[#3B5CA8]/15 focus:outline-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800 disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3B5CA8] px-4 py-3 text-sm font-bold text-white shadow-xs transition hover:bg-[#5A75BC] disabled:opacity-60"
             >
               {submitting ? 'Verificando credenciales...' : 'Iniciar Sesión'}
               <ArrowRight className="h-4 w-4" />
@@ -142,19 +144,19 @@ export function LoginPage() {
 
           <p className="mt-6 text-center text-xs text-slate-600">
             ¿Aún no cuenta con registro?{' '}
-            <Link to="/registro" className="font-bold text-teal-700 hover:underline">
+            <Link to="/registro" className="font-bold text-[#3B5CA8] hover:underline">
               Crear cuenta nueva (Paciente, Clínica o Especialista)
             </Link>
           </p>
         </div>
 
         {/* One-Click Demo Access for Evaluation */}
-        <div className="rounded-2xl border border-slate-200 bg-slate-100/80 p-6 sm:p-8 lg:col-span-6">
+        <div className="rounded-2xl border border-stone-200 bg-stone-100/70 p-6 sm:p-8 lg:col-span-6">
           <div className="mb-4">
-            <span className="inline-block rounded-md bg-slate-800 px-2.5 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
+            <span className="inline-block rounded-md bg-[#517327] px-2.5 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
               Acceso Rápido de Evaluación
             </span>
-            <h2 className="mt-2 text-lg font-bold text-slate-900">
+            <h2 className="mt-2 text-base font-bold text-slate-900">
               Cuentas Preconfiguradas con Estudios DICOM
             </h2>
             <p className="mt-1 text-xs leading-relaxed text-slate-600">
@@ -175,15 +177,15 @@ export function LoginPage() {
                   onClick={() => void handleDemoLogin(acc.email)}
                   className={`flex w-full items-start gap-3.5 rounded-xl border bg-white p-4 text-left shadow-xs transition ${acc.accent} disabled:opacity-60`}
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-xs ring-1 ring-slate-200">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-xs ring-1 ring-stone-200">
                     <Icon className="h-5 w-5 text-slate-800" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-teal-800">{acc.roleLabel}</span>
+                      <span className="text-xs font-bold text-slate-900">{acc.roleLabel}</span>
                       <span className="font-mono text-[11px] text-slate-500">{acc.email}</span>
                     </div>
-                    <div className="mt-0.5 text-sm font-bold text-slate-900">{acc.name}</div>
+                    <div className="mt-0.5 text-xs font-bold text-[#517327]">{acc.name}</div>
                     <p className="mt-1 text-xs text-slate-600">{acc.description}</p>
                   </div>
                 </button>

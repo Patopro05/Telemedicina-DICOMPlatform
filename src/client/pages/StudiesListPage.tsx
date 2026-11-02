@@ -7,7 +7,7 @@ import {
   Filter,
   Plus,
   Search,
-  ShieldCheck,
+  ShieldAlert,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
@@ -59,7 +59,7 @@ export function StudiesListPage() {
   }, [user, loadData]);
 
   if (loading) {
-    return <div className="p-12 text-center text-sm text-slate-500">Cargando expediente...</div>;
+    return <div className="p-12 text-center text-xs text-slate-500">Cargando expediente...</div>;
   }
   if (!user) {
     return <Navigate to="/acceso" replace />;
@@ -72,7 +72,7 @@ export function StudiesListPage() {
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="text-xs font-bold tracking-wider text-teal-700 uppercase">
+          <span className="text-xs font-bold tracking-wider text-[#517327] uppercase">
             {isSpecialist
               ? 'Pestaña de Descarga y Consulta para Médicos Especialistas'
               : user.role === 'clinic'
@@ -94,7 +94,7 @@ export function StudiesListPage() {
         {!isSpecialist && (
           <Link
             to="/panel/cargar"
-            className="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#3B5CA8] px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#5A75BC]"
           >
             <Plus className="h-4 w-4" />
             Cargar Nuevo Estudio DICOM
@@ -105,10 +105,10 @@ export function StudiesListPage() {
       {/* Metrics Cards */}
       {stats && (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+          <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
               <span>Estudios Totales</span>
-              <Activity className="h-4 w-4 text-teal-600" />
+              <Activity className="h-4 w-4 text-[#517327]" />
             </div>
             <div className="mt-2 text-2xl font-extrabold text-slate-900">{stats.totalStudies}</div>
             <div className="mt-0.5 text-[11px] text-slate-500">
@@ -116,7 +116,7 @@ export function StudiesListPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+          <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
               <span>Pendientes de Lectura</span>
               <Clock className="h-4 w-4 text-amber-600" />
@@ -129,23 +129,23 @@ export function StudiesListPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+          <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
               <span>Diagnósticos Emitidos</span>
-              <FileCheck2 className="h-4 w-4 text-emerald-600" />
+              <FileCheck2 className="h-4 w-4 text-[#517327]" />
             </div>
-            <div className="mt-2 text-2xl font-extrabold text-emerald-700">
+            <div className="mt-2 text-2xl font-extrabold text-[#517327]">
               {stats.diagnosedStudies}
             </div>
-            <div className="mt-0.5 text-[11px] text-slate-500">Dictámenes firmados listos</div>
+            <div className="mt-0.5 text-[11px] text-slate-500">Dictámenes listos para exportar</div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+          <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
               <span>Prioridad Urgente / STAT</span>
-              <ShieldCheck className="h-4 w-4 text-red-600" />
+              <ShieldAlert className="h-4 w-4 text-[#9C3B47]" />
             </div>
-            <div className="mt-2 text-2xl font-extrabold text-red-700">
+            <div className="mt-2 text-2xl font-extrabold text-[#9C3B47]">
               {stats.urgentOrStatStudies}
             </div>
             <div className="mt-0.5 text-[11px] text-slate-500">Atención prioritaria abierta</div>
@@ -154,7 +154,7 @@ export function StudiesListPage() {
       )}
 
       {/* Filter Bar */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
         <div className="grid gap-3 md:grid-cols-12">
           <div className="relative md:col-span-5">
             <Search className="pointer-events-none absolute top-3 left-3 h-4 w-4 text-slate-400" />
@@ -163,7 +163,7 @@ export function StudiesListPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por paciente, folio ACC, expediente o región..."
-              className="w-full rounded-xl border border-slate-300 py-2 pr-3 pl-9 text-sm focus:border-teal-600 focus:outline-none"
+              className="w-full rounded-xl border border-stone-300 py-2 pr-3 pl-9 text-xs focus:border-[#3B5CA8] focus:outline-none"
             />
           </div>
 
@@ -172,7 +172,7 @@ export function StudiesListPage() {
             <select
               value={modality}
               onChange={(e) => setModality(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium text-slate-700"
+              className="w-full rounded-xl border border-stone-300 px-3 py-2 text-xs font-medium text-slate-700"
             >
               <option value="ALL">Todas las Modalidades</option>
               <option value="CT">TAC (CT)</option>
@@ -188,7 +188,7 @@ export function StudiesListPage() {
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium text-slate-700"
+              className="w-full rounded-xl border border-stone-300 px-3 py-2 text-xs font-medium text-slate-700"
             >
               <option value="ALL">Todos los Estados</option>
               <option value="pending">Pendientes de Lectura</option>
@@ -201,7 +201,7 @@ export function StudiesListPage() {
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium text-slate-700"
+              className="w-full rounded-xl border border-stone-300 px-3 py-2 text-xs font-medium text-slate-700"
             >
               <option value="ALL">Cualquier Prioridad</option>
               <option value="stat">Emergencia STAT</option>
@@ -212,10 +212,10 @@ export function StudiesListPage() {
         </div>
       </div>
 
-      {/* Studies Table / Cards */}
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      {/* Studies Table */}
+      <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xs">
         {fetching ? (
-          <div className="p-10 text-center text-sm text-slate-500">
+          <div className="p-10 text-center text-xs text-slate-500">
             Consultando estudios DICOM almacenados...
           </div>
         ) : studies.length === 0 ? (
@@ -226,7 +226,7 @@ export function StudiesListPage() {
             {!isSpecialist && (
               <Link
                 to="/panel/cargar"
-                className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 hover:underline"
+                className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#3B5CA8] hover:underline"
               >
                 <Plus className="h-4 w-4" />
                 Subir mi primer estudio en formato DICOM
@@ -236,7 +236,7 @@ export function StudiesListPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-xs font-bold tracking-wide text-slate-600 uppercase">
+              <thead className="border-b border-stone-200 bg-stone-50 text-xs font-bold tracking-wide text-slate-600 uppercase">
                 <tr>
                   <th className="px-4 py-3.5">Folio / Fecha</th>
                   <th className="px-4 py-3.5">Paciente y Origen</th>
@@ -245,15 +245,15 @@ export function StudiesListPage() {
                   <th className="px-4 py-3.5 text-right">Acciones y Descarga DICOM</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-stone-200">
                 {studies.map((st) => {
                   const priorityInfo = getPriorityMeta(st.priority);
                   const statusInfo = getStatusMeta(st.status);
 
                   return (
-                    <tr key={st.id} className="transition hover:bg-slate-50/80">
+                    <tr key={st.id} className="transition hover:bg-stone-50/80">
                       <td className="px-4 py-4 align-top whitespace-nowrap">
-                        <div className="font-mono text-xs font-bold text-teal-800">
+                        <div className="font-mono text-xs font-bold text-[#517327]">
                           {st.accessionNumber}
                         </div>
                         <div className="mt-0.5 text-xs text-slate-500">{st.studyDate}</div>
@@ -268,7 +268,7 @@ export function StudiesListPage() {
                         <div className="text-xs text-slate-600">
                           ID: <span className="font-mono">{st.patientIdentifier}</span>
                           {st.isAnonymized && (
-                            <span className="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700">
+                            <span className="ml-2 rounded bg-stone-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700">
                               PS3.15 Anónimo
                             </span>
                           )}
@@ -279,7 +279,7 @@ export function StudiesListPage() {
                       </td>
 
                       <td className="px-4 py-4 align-top">
-                        <div className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-2 py-0.5 font-mono text-xs font-bold text-teal-300">
+                        <div className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-2 py-0.5 font-mono text-xs font-bold text-[#a6cc72]">
                           {st.modality}
                         </div>
                         <div className="mt-1 text-xs font-semibold text-slate-800">
@@ -293,12 +293,12 @@ export function StudiesListPage() {
                       <td className="px-4 py-4 align-top whitespace-nowrap">
                         <div className="flex flex-col items-start gap-1.5">
                           <span
-                            className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${priorityInfo.badgeClass}`}
+                            className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] ${priorityInfo.badgeClass}`}
                           >
                             {priorityInfo.label}
                           </span>
                           <span
-                            className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${statusInfo.badgeClass}`}
+                            className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] ${statusInfo.badgeClass}`}
                           >
                             {statusInfo.label}
                           </span>
@@ -309,7 +309,7 @@ export function StudiesListPage() {
                         <div className="inline-flex flex-wrap justify-end gap-2">
                           <a
                             href={`/api/studies/${encodeURIComponent(st.id)}/download-zip`}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-teal-600 hover:text-teal-800"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-[#3B5CA8] hover:text-[#3B5CA8]"
                             title="Descargar paquete ZIP con archivos DICOM originales y manifiesto SHA-256"
                           >
                             <Archive className="h-3.5 w-3.5" />
@@ -318,7 +318,7 @@ export function StudiesListPage() {
 
                           <Link
                             to={`/panel/estudios/${st.id}`}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-teal-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-teal-800"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#3B5CA8] px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#5A75BC]"
                           >
                             <Eye className="h-3.5 w-3.5" />
                             {isSpecialist

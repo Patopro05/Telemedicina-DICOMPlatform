@@ -93,7 +93,7 @@ export function UploadStudyPage() {
 
   if (loading) {
     return (
-      <div className="p-12 text-center text-sm text-slate-500">Verificando permisos de acceso...</div>
+      <div className="p-12 text-center text-xs text-slate-500">Verificando permisos de acceso...</div>
     );
   }
   if (!user) {
@@ -213,7 +213,7 @@ export function UploadStudyPage() {
     setUploading(true);
 
     try {
-      setUploadProgress('Registrando expediente clínico del estudio...');
+      setUploadProgress('Registrando expediente clínico en ImaRis...');
       const effectivePatientName = anonymizePhi
         ? 'Paciente Anonimizado (PS3.15)'
         : patientName.trim();
@@ -260,7 +260,7 @@ export function UploadStudyPage() {
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="text-xs font-bold tracking-wider text-teal-700 uppercase">
+          <span className="text-xs font-bold tracking-wider text-[#517327] uppercase">
             Pestaña de Carga de Archivos ({user.role === 'clinic' ? 'Unidad Hospitalaria' : 'Paciente'})
           </span>
           <h1 className="mt-1 text-2xl font-extrabold text-slate-900 sm:text-3xl">
@@ -274,13 +274,13 @@ export function UploadStudyPage() {
       </div>
 
       {/* Built-in Sample DICOM Generator Bar for Testing */}
-      <div className="rounded-2xl border border-teal-200 bg-teal-50/60 p-4 sm:p-5">
+      <div className="rounded-2xl border border-[#617E3C]/30 bg-[#517327]/5 p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <FlaskConical className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" />
+            <FlaskConical className="mt-0.5 h-5 w-5 shrink-0 text-[#517327]" />
             <div>
               <h2 className="text-sm font-bold text-slate-900">
-                ¿No cuenta con un archivo .dcm en su equipo en este momento?
+                ¿Desea probar la plataforma con estudios sintéticos calibrados?
               </h2>
               <p className="text-xs text-slate-600">
                 Genere archivos DICOM reales (NEMA PS3.10 de 16 bits) para descargarlos a su
@@ -293,34 +293,34 @@ export function UploadStudyPage() {
             <button
               type="button"
               onClick={() => void handleGenerateSample('ct_chest', 'stage')}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-teal-800"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[#517327] px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-[#617E3C]"
             >
               <Upload className="h-3.5 w-3.5" />
-              Adjuntar Muestra TAC Tórax (16-bit HU)
+              Adjuntar TAC Tórax (16-bit HU)
             </button>
             <button
               type="button"
               onClick={() => void handleGenerateSample('mr_brain', 'stage')}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-700 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-indigo-800"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[#3B5CA8] px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-[#5A75BC]"
             >
               <Upload className="h-3.5 w-3.5" />
-              Adjuntar Muestra RM Cerebral
+              Adjuntar RM Cerebral
             </button>
             <button
               type="button"
               onClick={() => void handleGenerateSample('dx_chest', 'download')}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-stone-50"
             >
               <Download className="h-3.5 w-3.5" />
-              Guardar RX_Torax.dcm en mi PC
+              Guardar RX_Torax.dcm en PC
             </button>
           </div>
         </div>
       </div>
 
       {parseError && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-medium text-red-800">
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+        <div className="flex items-start gap-2.5 rounded-xl border border-[#9C3B47]/30 bg-[#9C3B47]/10 p-4 text-xs font-semibold text-[#9C3B47]">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#9C3B47]" />
           <span>{parseError}</span>
         </div>
       )}
@@ -342,8 +342,8 @@ export function UploadStudyPage() {
             onClick={() => fileInputRef.current?.click()}
             className={`cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition ${
               dragActive
-                ? 'border-teal-600 bg-teal-50'
-                : 'border-slate-300 bg-white hover:border-teal-500 hover:bg-slate-50/70'
+                ? 'border-[#517327] bg-[#517327]/10'
+                : 'border-stone-300 bg-white hover:border-[#517327] hover:bg-[#517327]/5'
             }`}
           >
             <input
@@ -354,7 +354,7 @@ export function UploadStudyPage() {
               onChange={(e) => void handleBrowserFileSelection(e.target.files)}
               className="hidden"
             />
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-50 text-teal-700">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#517327]/10 text-[#517327]">
               <FileUp className="h-7 w-7" />
             </div>
             <h3 className="mt-4 text-base font-bold text-slate-900">
@@ -369,7 +369,7 @@ export function UploadStudyPage() {
 
           {/* Staged Files Preview */}
           {stagedFiles.length > 0 && (
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+            <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-sm font-bold text-slate-900">
                   Archivos Validados Listos para Transferencia ({stagedFiles.length})
@@ -377,7 +377,7 @@ export function UploadStudyPage() {
                 <button
                   type="button"
                   onClick={() => setStagedFiles([])}
-                  className="text-xs font-semibold text-red-600 hover:underline"
+                  className="text-xs font-semibold text-[#9C3B47] hover:underline"
                 >
                   Limpiar lista
                 </button>
@@ -387,7 +387,7 @@ export function UploadStudyPage() {
                 {stagedFiles.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-3.5 rounded-xl border border-slate-200 bg-slate-50 p-3"
+                    className="flex items-center gap-3.5 rounded-xl border border-stone-200 bg-stone-50 p-3"
                   >
                     {item.previewDataUrl ? (
                       <img
@@ -396,7 +396,7 @@ export function UploadStudyPage() {
                         className="h-14 w-14 shrink-0 rounded-lg border border-slate-800 bg-slate-950 object-cover"
                       />
                     ) : (
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-slate-900 font-mono text-xs font-bold text-teal-400">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-slate-900 font-mono text-xs font-bold text-[#a6cc72]">
                         {item.metadata.modality}
                       </div>
                     )}
@@ -406,7 +406,7 @@ export function UploadStudyPage() {
                         <span className="truncate text-xs font-bold text-slate-900">
                           {item.filename}
                         </span>
-                        <span className="rounded bg-teal-100 px-1.5 py-0.5 text-[10px] font-bold text-teal-800">
+                        <span className="rounded bg-[#517327]/15 px-1.5 py-0.5 text-[10px] font-bold text-[#517327]">
                           {item.metadata.modality}
                         </span>
                       </div>
@@ -424,7 +424,7 @@ export function UploadStudyPage() {
                       onClick={() =>
                         setStagedFiles((prev) => prev.filter((f) => f.id !== item.id))
                       }
-                      className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                      className="rounded-lg p-1.5 text-slate-400 hover:bg-[#9C3B47]/10 hover:text-[#9C3B47]"
                       title="Quitar archivo"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -436,16 +436,16 @@ export function UploadStudyPage() {
           )}
 
           {/* Client-side Privacy / Anonymizer Option */}
-          <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+          <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
             <input
               type="checkbox"
               checked={anonymizePhi}
               onChange={(e) => setAnonymizePhi(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-slate-300 text-teal-700 focus:ring-teal-600"
+              className="mt-1 h-4 w-4 rounded border-stone-300 text-[#517327] focus:ring-[#517327]"
             />
             <div>
               <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                <Shield className="h-4 w-4 text-teal-700" />
+                <Shield className="h-4 w-4 text-[#517327]" />
                 Aplicar Anonimización de Cabecera DICOM (Perfil NEMA PS3.15)
               </div>
               <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
@@ -458,7 +458,7 @@ export function UploadStudyPage() {
         </div>
 
         {/* Right Column: Clinical Metadata Form */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-5">
+        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs lg:col-span-5">
           <h2 className="text-base font-bold text-slate-900">Datos Clínicos del Estudio</h2>
           <p className="mt-0.5 text-xs text-slate-500">
             Los metadatos detectados en el archivo DICOM se prellenan automáticamente.
@@ -476,7 +476,7 @@ export function UploadStudyPage() {
                 value={anonymizePhi ? 'PACIENTE ANONIMIZADO (PS3.15)' : patientName}
                 onChange={(e) => setPatientName(e.target.value)}
                 placeholder="Nombre completo del paciente"
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm disabled:bg-slate-100"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm disabled:bg-stone-100"
               />
             </div>
 
@@ -491,7 +491,7 @@ export function UploadStudyPage() {
                   value={patientIdentifier}
                   onChange={(e) => setPatientIdentifier(e.target.value)}
                   placeholder="Ej. EXP-88412"
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                 />
               </div>
 
@@ -500,7 +500,7 @@ export function UploadStudyPage() {
                 <select
                   value={patientSex}
                   onChange={(e) => setPatientSex(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                 >
                   <option value="M">Masculino (M)</option>
                   <option value="F">Femenino (F)</option>
@@ -519,7 +519,7 @@ export function UploadStudyPage() {
                   value={patientEmail}
                   onChange={(e) => setPatientEmail(e.target.value)}
                   placeholder="paciente@correo.mx"
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                 />
               </div>
             )}
@@ -532,7 +532,7 @@ export function UploadStudyPage() {
                 <select
                   value={modality}
                   onChange={(e) => setModality(e.target.value as DicomModality)}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                 >
                   <option value="CT">TAC (CT)</option>
                   <option value="MR">Resonancia Magnética (MR)</option>
@@ -551,7 +551,7 @@ export function UploadStudyPage() {
                 <select
                   value={priority}
                   onChange={(e) => setPriority(e.target.value as StudyPriority)}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                 >
                   <option value="routine">Rutina</option>
                   <option value="urgent">Urgente</option>
@@ -571,7 +571,7 @@ export function UploadStudyPage() {
                   value={bodyPart}
                   onChange={(e) => setBodyPart(e.target.value)}
                   placeholder="Ej. Tórax, Cráneo, Columna"
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                 />
               </div>
 
@@ -584,7 +584,7 @@ export function UploadStudyPage() {
                   required
                   value={studyDate}
                   onChange={(e) => setStudyDate(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -599,19 +599,20 @@ export function UploadStudyPage() {
                 value={clinicalIndication}
                 onChange={(e) => setClinicalIndication(e.target.value)}
                 placeholder="Describa síntomas relevantes, antecedentes quirúrgicos o sospecha diagnóstica para el médico especialista..."
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
               />
             </div>
 
+            {/* Blue Accept / Allow Button */}
             <button
               type="submit"
               disabled={uploading || stagedFiles.length === 0}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800 disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3B5CA8] px-5 py-3 text-sm font-bold text-white shadow-xs transition hover:bg-[#5A75BC] disabled:opacity-50"
             >
               <CheckCircle2 className="h-4 w-4" />
               {uploading
                 ? uploadProgress || 'Transfiriendo estudio...'
-                : `Transferir Estudio DICOM (${stagedFiles.length} ${
+                : `Transferir Estudio DICOM a ImaRis (${stagedFiles.length} ${
                     stagedFiles.length === 1 ? 'archivo' : 'archivos'
                   })`}
             </button>

@@ -2,10 +2,32 @@
 
 @layer base {
   body {
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
       Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
+
+:root {
+  --olive-primary: #517327;
+  --olive-secondary: #617E3C;
+  --action-blue: #3B5CA8;
+  --action-blue-hover: #5A75BC;
+  --alert-red: #9C3B47;
+}
+
+/* Custom Palette Utility Classes */
+.bg-olive-primary { background-color: #517327; }
+.bg-olive-secondary { background-color: #617E3C; }
+.bg-action-blue { background-color: #3B5CA8; }
+.bg-action-blue:hover { background-color: #5A75BC; }
+.bg-alert-red { background-color: #9C3B47; }
+.text-olive-primary { color: #517327; }
+.text-olive-secondary { color: #617E3C; }
+.text-action-blue { color: #3B5CA8; }
+.text-alert-red { color: #9C3B47; }
+.border-olive-primary { border-color: #517327; }
+.border-action-blue { border-color: #3B5CA8; }
+.border-alert-red { border-color: #9C3B47; }
 
 @media print {
   .no-print {

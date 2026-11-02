@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   ClipboardCheck,
   Download,
+  FileDown,
   FileText,
   History,
   Printer,
@@ -24,6 +25,7 @@ import {
   getSeverityMeta,
   getStatusMeta,
 } from '../lib/api';
+import { generateDiagnosticPdfReport } from '../lib/pdfReportGenerator';
 
 export function StudyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -57,7 +59,7 @@ export function StudyDetailPage() {
         setSeverityLevel(detail.report.severityLevel);
       } else {
         setTechnique(
-          `Adquisición digital en formato DICOM (${detail.modality}) evaluada en estación teleradiológica sin pérdida.`
+          `Adquisición digital en formato DICOM (${detail.modality}) evaluada en estación teleradiológica ImaRis sin pérdida.`
         );
       }
     } catch (err) {
@@ -74,7 +76,7 @@ export function StudyDetailPage() {
   }, [user, id, loadStudy]);
 
   if (loading) {
-    return <div className="p-12 text-center text-sm text-slate-500">Cargando...</div>;
+    return <div className="p-12 text-center text-xs text-slate-500">Cargando...</div>;
   }
   if (!user) {
     return <Navigate to="/acceso" replace />;
@@ -82,7 +84,7 @@ export function StudyDetailPage() {
 
   if (fetching) {
     return (
-      <div className="p-16 text-center text-sm font-medium text-slate-600">
+      <div className="p-16 text-center text-xs font-medium text-slate-600">
         Recuperando expediente e imágenes DICOM...
       </div>
     );
@@ -91,7 +93,7 @@ export function StudyDetailPage() {
   if (error || !study) {
     return (
       <div className="mx-auto max-w-3xl p-8">
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">
+        <div className="rounded-2xl border border-[#9C3B47]/30 bg-[#9C3B47]/10 p-6 text-sm text-[#9C3B47]">
           {error || 'Estudio no disponible.'}
         </div>
       </div>
@@ -106,6 +108,11 @@ export function StudyDetailPage() {
   const handleClaimStudy = async () => {
     await api.claimStudy(study.id);
     await loadStudy();
+  };
+
+  const handleDownloadPdf = () => {
+    if (!study.report) return;
+    generateDiagnosticPdfReport(study);
   };
 
   const handleSubmitDiagnosis = async (e: React.FormEvent) => {
@@ -136,7 +143,7 @@ export function StudyDetailPage() {
         <div className="space-y-1">
           <Link
             to={backPath}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#517327] hover:underline"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Volver al listado de estudios
@@ -149,12 +156,12 @@ export function StudyDetailPage() {
               </span>
             </h1>
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${priorityInfo.badgeClass}`}
+              className={`rounded-full border px-2.5 py-0.5 text-xs ${priorityInfo.badgeClass}`}
             >
               {priorityInfo.label}
             </span>
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${statusInfo.badgeClass}`}
+              className={`rounded-full border px-2.5 py-0.5 text-xs ${statusInfo.badgeClass}`}
             >
               {statusInfo.label}
             </span>
@@ -170,17 +177,29 @@ export function StudyDetailPage() {
             <button
               type="button"
               onClick={() => void handleClaimStudy()}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-sky-300 bg-sky-50 px-3.5 py-2 text-xs font-bold text-sky-800 hover:bg-sky-100"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#3B5CA8]/30 bg-[#3B5CA8]/10 px-3.5 py-2 text-xs font-bold text-[#3B5CA8] hover:bg-[#3B5CA8]/20"
             >
               <ClipboardCheck className="h-4 w-4" />
               Marcar En Revisión Médica
             </button>
           )}
+
+          {study.report && (
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#517327] px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#617E3C]"
+            >
+              <FileDown className="h-4 w-4" />
+              Descargar Dictamen en PDF
+            </button>
+          )}
+
           <a
             href={`/api/studies/${encodeURIComponent(study.id)}/download-zip`}
             className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-slate-800"
           >
-            <Archive className="h-4 w-4 text-teal-400" />
+            <Archive className="h-4 w-4 text-[#a6cc72]" />
             Descargar Serie Completa ZIP ({study.files.length}{' '}
             {study.files.length === 1 ? 'archivo .dcm' : 'archivos .dcm'})
           </a>
@@ -203,9 +222,9 @@ export function StudyDetailPage() {
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Left Column: Clinical Context & Lossless DICOM Downloads */}
         <div className="no-print space-y-6 lg:col-span-5">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+          <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs">
             <h2 className="text-sm font-bold text-slate-900">Motivo Clínico e Información</h2>
-            <p className="mt-2 rounded-xl bg-slate-50 p-3.5 text-xs leading-relaxed text-slate-700">
+            <p className="mt-2 rounded-xl bg-stone-50 p-3.5 text-xs leading-relaxed text-slate-700">
               {study.clinicalIndication}
             </p>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-xs">
@@ -234,12 +253,12 @@ export function StudyDetailPage() {
           </div>
 
           {/* Individual Lossless DICOM Slice Download Box */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+          <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-bold text-slate-900">
                 Archivos Binarios DICOM Sin Pérdida ({study.files.length})
               </h2>
-              <ShieldCheck className="h-4 w-4 text-teal-700" />
+              <ShieldCheck className="h-4 w-4 text-[#517327]" />
             </div>
             <p className="mt-1 text-xs text-slate-500">
               Descargue cortes individuales <code>.dcm</code> verificados con SHA-256 para
@@ -250,7 +269,7 @@ export function StudyDetailPage() {
               {study.files.map((f) => (
                 <div
                   key={f.id}
-                  className="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-stone-200 bg-stone-50 p-2.5"
                 >
                   <div className="min-w-0">
                     <div className="truncate text-xs font-bold text-slate-900">{f.filename}</div>
@@ -265,7 +284,7 @@ export function StudyDetailPage() {
                     href={`/api/studies/${encodeURIComponent(study.id)}/files/${encodeURIComponent(
                       f.id
                     )}/download`}
-                    className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-teal-700 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-teal-800"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#3B5CA8] px-2.5 py-1.5 text-xs font-bold text-white hover:bg-[#5A75BC]"
                   >
                     <Download className="h-3.5 w-3.5" />
                     .dcm
@@ -276,14 +295,14 @@ export function StudyDetailPage() {
           </div>
 
           {/* Audit Trail */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+          <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs">
             <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
               <History className="h-4 w-4 text-slate-600" />
               Bitácora de Trazabilidad y Accesos
             </div>
             <ul className="mt-3 max-h-48 space-y-2.5 overflow-y-auto text-xs">
               {study.auditLogs.map((log) => (
-                <li key={log.id} className="border-l-2 border-teal-500 pl-3">
+                <li key={log.id} className="border-l-2 border-[#517327] pl-3">
                   <div className="font-semibold text-slate-800">{log.details || log.action}</div>
                   <div className="text-[11px] text-slate-500">
                     {log.actorName} · {new Date(log.createdAt).toLocaleString('es-MX')}
@@ -296,32 +315,42 @@ export function StudyDetailPage() {
 
         {/* Right Column: Signed Diagnostic Report Viewer & Specialist Composer */}
         <div className="space-y-6 lg:col-span-7">
-          {/* Formatted Printable Diagnostic Report (if emitted) */}
+          {/* Formatted Diagnostic Report */}
           {study.report && (
-            <div className="print-report-card rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-4">
+            <div className="print-report-card rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-stone-200 pb-4">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-emerald-700 uppercase">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#517327] uppercase">
                     <FileText className="h-4 w-4" />
-                    Dictamen Radiológico a Distancia
+                    Dictamen Radiológico a Distancia · ImaRis
                   </div>
                   <h2 className="mt-1 text-xl font-extrabold text-slate-900">
                     Reporte de Diagnóstico Médico — {study.accessionNumber}
                   </h2>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="no-print inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
-                >
-                  <Printer className="h-3.5 w-3.5" />
-                  Imprimir Dictamen
-                </button>
+                <div className="no-print flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleDownloadPdf}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#517327] px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-[#617E3C]"
+                  >
+                    <FileDown className="h-3.5 w-3.5" />
+                    Exportar PDF
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-stone-50"
+                  >
+                    <Printer className="h-3.5 w-3.5" />
+                    Imprimir
+                  </button>
+                </div>
               </div>
 
               <div className="mt-4">
                 <span
-                  className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold ${
+                  className={`inline-flex rounded-full border px-3 py-1 text-xs ${
                     getSeverityMeta(study.report.severityLevel).badgeClass
                   }`}
                 >
@@ -344,8 +373,8 @@ export function StudyDetailPage() {
                   <p className="mt-1 whitespace-pre-line">{study.report.findings}</p>
                 </div>
 
-                <div className="rounded-xl border border-teal-200 bg-teal-50/50 p-4">
-                  <h3 className="text-xs font-bold tracking-wide text-teal-900 uppercase">
+                <div className="rounded-xl border border-[#3B5CA8]/30 bg-[#3B5CA8]/5 p-4">
+                  <h3 className="text-xs font-bold tracking-wide text-[#3B5CA8] uppercase">
                     Impresión Diagnóstica (Conclusión)
                   </h3>
                   <p className="mt-1 font-semibold whitespace-pre-line text-slate-900">
@@ -361,7 +390,7 @@ export function StudyDetailPage() {
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 pt-4 text-xs text-slate-600">
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-stone-200 pt-4 text-xs text-slate-600">
                 <div>
                   <div className="font-bold text-slate-900">{study.report.specialistName}</div>
                   <div>
@@ -390,9 +419,8 @@ export function StudyDetailPage() {
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-amber-900/90">
                     Sus archivos DICOM se encuentran almacenados de forma íntegra y disponibles en
-                    la bandeja teleradiológica. En cuanto un especialista emita el diagnóstico
-                    remoto, aparecerá automáticamente en esta sección listo para consulta e
-                    impresión.
+                    la bandeja teleradiológica de ImaRis. En cuanto un especialista emita el diagnóstico
+                    remoto, podrá descargarlo en PDF e imprimirlo inmediatamente.
                   </p>
                 </div>
               </div>
@@ -401,8 +429,8 @@ export function StudyDetailPage() {
 
           {/* Specialist Remote Diagnosis Composer */}
           {isSpecialist && (
-            <div className="no-print rounded-2xl border border-indigo-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-indigo-700 uppercase">
+            <div className="no-print rounded-2xl border border-[#3B5CA8]/30 bg-white p-6 shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#3B5CA8] uppercase">
                 <Stethoscope className="h-4 w-4" />
                 Módulo Exclusivo para Médico Especialista
               </div>
@@ -413,9 +441,9 @@ export function StudyDetailPage() {
               </h2>
 
               {reportSavedBanner && (
-                <div className="mt-3 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Dictamen firmado y publicado exitosamente para el paciente y la unidad médica.
+                <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#517327]/30 bg-[#517327]/10 p-3 text-xs font-semibold text-[#517327]">
+                  <CheckCircle2 className="h-4 w-4 text-[#517327]" />
+                  Dictamen firmado y publicado exitosamente en ImaRis para el paciente y la clínica.
                 </div>
               )}
 
@@ -427,7 +455,7 @@ export function StudyDetailPage() {
                   <select
                     value={severityLevel}
                     onChange={(e) => setSeverityLevel(e.target.value as ReportSeverity)}
-                    className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                   >
                     <option value="normal">Normal / Sin hallazgos patológicos agudos</option>
                     <option value="benign">Hallazgos benignos o crónicos estables</option>
@@ -446,7 +474,7 @@ export function StudyDetailPage() {
                     rows={2}
                     value={technique}
                     onChange={(e) => setTechnique(e.target.value)}
-                    className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                   />
                 </div>
 
@@ -460,7 +488,7 @@ export function StudyDetailPage() {
                     value={findings}
                     onChange={(e) => setFindings(e.target.value)}
                     placeholder="Describa sistemáticamente las estructuras anatómicas, densidades HU o intensidades de señal observadas..."
-                    className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                   />
                 </div>
 
@@ -474,7 +502,7 @@ export function StudyDetailPage() {
                     value={impression}
                     onChange={(e) => setImpression(e.target.value)}
                     placeholder="Síntesis diagnóstica precisa..."
-                    className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                   />
                 </div>
 
@@ -487,14 +515,15 @@ export function StudyDetailPage() {
                     value={recommendations}
                     onChange={(e) => setRecommendations(e.target.value)}
                     placeholder="Estudios complementarios o seguimiento clínico sugerido..."
-                    className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
                   />
                 </div>
 
+                {/* Blue Submit Button */}
                 <button
                   type="submit"
                   disabled={savingReport}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-800 disabled:opacity-60"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3B5CA8] px-5 py-3 text-sm font-bold text-white shadow-xs transition hover:bg-[#5A75BC] disabled:opacity-60"
                 >
                   <CheckCircle2 className="h-4 w-4" />
                   {savingReport

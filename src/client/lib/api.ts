@@ -203,7 +203,7 @@ export function getPriorityMeta(priority: StudyPriority): {
     case 'stat':
       return {
         label: 'Emergencia STAT',
-        badgeClass: 'bg-red-100 text-red-800 border-red-200',
+        badgeClass: 'bg-[#9C3B47]/10 text-[#9C3B47] border-[#9C3B47]/30 font-bold',
       };
     case 'urgent':
       return {
@@ -231,12 +231,12 @@ export function getStatusMeta(status: StudyStatus): {
     case 'in_review':
       return {
         label: 'En Revisión Médica',
-        badgeClass: 'bg-sky-50 text-sky-700 border-sky-200',
+        badgeClass: 'bg-[#3B5CA8]/10 text-[#3B5CA8] border-[#3B5CA8]/30',
       };
     case 'diagnosed':
       return {
         label: 'Diagnosticado',
-        badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        badgeClass: 'bg-[#517327]/10 text-[#517327] border-[#517327]/30 font-semibold',
       };
   }
 }
@@ -249,12 +249,12 @@ export function getSeverityMeta(severity: ReportSeverity): {
     case 'normal':
       return {
         label: 'Sin hallazgos patológicos agudos',
-        badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        badgeClass: 'bg-[#517327]/10 text-[#517327] border-[#517327]/30',
       };
     case 'benign':
       return {
         label: 'Hallazgos benignos / incidentales',
-        badgeClass: 'bg-teal-100 text-teal-800 border-teal-200',
+        badgeClass: 'bg-[#617E3C]/10 text-[#617E3C] border-[#617E3C]/30',
       };
     case 'followup':
       return {
@@ -264,7 +264,7 @@ export function getSeverityMeta(severity: ReportSeverity): {
     case 'critical':
       return {
         label: 'Hallazgo prioritario / Atención inmediata',
-        badgeClass: 'bg-red-100 text-red-800 border-red-200',
+        badgeClass: 'bg-[#9C3B47]/10 text-[#9C3B47] border-[#9C3B47]/30 font-bold',
       };
   }
 }

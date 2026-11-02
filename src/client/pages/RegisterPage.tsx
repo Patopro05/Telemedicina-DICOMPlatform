@@ -64,15 +64,15 @@ export function RegisterPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs sm:p-8">
         <div className="mb-6">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-800">
-            <UserPlus className="h-5 w-5" />
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#517327]/10 p-2 text-[#517327]">
+            <img src="/imaris_heart.svg" alt="ImaRis Heart" className="h-full w-full object-contain" />
           </div>
           <h1 className="mt-3 text-2xl font-bold text-slate-900">
-            Registro de Usuario en la Plataforma
+            Registro en <span className="text-[#517327]">ImaRis</span>
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-xs text-slate-600">
             Seleccione el perfil de acceso correspondiente para configurar sus permisos de carga o
             diagnóstico remoto de estudios DICOM.
           </p>
@@ -85,11 +85,11 @@ export function RegisterPage() {
             onClick={() => setRole('patient')}
             className={`flex flex-col items-start rounded-xl border p-4 text-left transition ${
               role === 'patient'
-                ? 'border-teal-600 bg-teal-50/70 ring-2 ring-teal-600/20'
-                : 'border-slate-200 hover:bg-slate-50'
+                ? 'border-[#517327] bg-[#517327]/10 ring-2 ring-[#517327]/20'
+                : 'border-stone-200 hover:bg-stone-50'
             }`}
           >
-            <User className="h-5 w-5 text-teal-700" />
+            <User className="h-5 w-5 text-[#517327]" />
             <span className="mt-2 text-sm font-bold text-slate-900">Paciente / Usuario</span>
             <span className="mt-0.5 text-[11px] text-slate-600">
               Carga de estudios propios y consulta de dictámenes.
@@ -101,11 +101,11 @@ export function RegisterPage() {
             onClick={() => setRole('clinic')}
             className={`flex flex-col items-start rounded-xl border p-4 text-left transition ${
               role === 'clinic'
-                ? 'border-sky-600 bg-sky-50/70 ring-2 ring-sky-600/20'
-                : 'border-slate-200 hover:bg-slate-50'
+                ? 'border-[#617E3C] bg-[#617E3C]/10 ring-2 ring-[#617E3C]/20'
+                : 'border-stone-200 hover:bg-stone-50'
             }`}
           >
-            <Building2 className="h-5 w-5 text-sky-700" />
+            <Building2 className="h-5 w-5 text-[#617E3C]" />
             <span className="mt-2 text-sm font-bold text-slate-900">Clínica / Hospital</span>
             <span className="mt-0.5 text-[11px] text-slate-600">
               Carga institucional de estudios de pacientes.
@@ -117,11 +117,11 @@ export function RegisterPage() {
             onClick={() => setRole('specialist')}
             className={`flex flex-col items-start rounded-xl border p-4 text-left transition ${
               role === 'specialist'
-                ? 'border-indigo-600 bg-indigo-50/70 ring-2 ring-indigo-600/20'
-                : 'border-slate-200 hover:bg-slate-50'
+                ? 'border-[#3B5CA8] bg-[#3B5CA8]/10 ring-2 ring-[#3B5CA8]/20'
+                : 'border-stone-200 hover:bg-stone-50'
             }`}
           >
-            <Stethoscope className="h-5 w-5 text-indigo-700" />
+            <Stethoscope className="h-5 w-5 text-[#3B5CA8]" />
             <span className="mt-2 text-sm font-bold text-slate-900">Médico Especialista</span>
             <span className="mt-0.5 text-[11px] text-slate-600">
               Descarga DICOM, visor clínico y diagnóstico remoto.
@@ -130,8 +130,8 @@ export function RegisterPage() {
         </div>
 
         {error && (
-          <div className="mb-5 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs font-medium text-red-800">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+          <div className="mb-5 flex items-start gap-2 rounded-xl border border-[#9C3B47]/30 bg-[#9C3B47]/10 p-3.5 text-xs font-semibold text-[#9C3B47]">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#9C3B47]" />
             <span>{error}</span>
           </div>
         )}
@@ -150,7 +150,7 @@ export function RegisterPage() {
                 placeholder={
                   role === 'specialist' ? 'Dr. Alejandro Rivera' : 'Nombre y apellidos'
                 }
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-teal-600 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm focus:border-[#3B5CA8] focus:outline-none"
               />
             </div>
 
@@ -163,13 +163,13 @@ export function RegisterPage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+52 81 0000 0000"
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-teal-600 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm focus:border-[#3B5CA8] focus:outline-none"
               />
             </div>
           </div>
 
           {role === 'clinic' && (
-            <div className="grid gap-4 rounded-xl border border-sky-200 bg-sky-50/40 p-4 sm:grid-cols-2">
+            <div className="grid gap-4 rounded-xl border border-[#617E3C]/30 bg-[#617E3C]/5 p-4 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-semibold text-slate-700">
                   Nombre de la Clínica u Hospital *
@@ -180,7 +180,7 @@ export function RegisterPage() {
                   value={institutionName}
                   onChange={(e) => setInstitutionName(e.target.value)}
                   placeholder="Hospital General / Clínica Imagen"
-                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm focus:border-sky-600 focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm focus:border-[#617E3C] focus:outline-none"
                 />
               </div>
               <div>
@@ -192,14 +192,14 @@ export function RegisterPage() {
                   value={cluesCode}
                   onChange={(e) => setCluesCode(e.target.value)}
                   placeholder="Ej. NLSSA012345"
-                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm focus:border-sky-600 focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm focus:border-[#617E3C] focus:outline-none"
                 />
               </div>
             </div>
           )}
 
           {role === 'specialist' && (
-            <div className="grid gap-4 rounded-xl border border-indigo-200 bg-indigo-50/40 p-4 sm:grid-cols-2">
+            <div className="grid gap-4 rounded-xl border border-[#3B5CA8]/30 bg-[#3B5CA8]/5 p-4 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-semibold text-slate-700">
                   Cédula Profesional / Especialidad *
@@ -210,7 +210,7 @@ export function RegisterPage() {
                   value={medicalLicense}
                   onChange={(e) => setMedicalLicense(e.target.value)}
                   placeholder="Ej. CED-7829104"
-                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm focus:border-indigo-600 focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm focus:border-[#3B5CA8] focus:outline-none"
                 />
               </div>
               <div>
@@ -220,7 +220,7 @@ export function RegisterPage() {
                 <select
                   value={specialty}
                   onChange={(e) => setSpecialty(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm focus:border-indigo-600 focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm focus:border-[#3B5CA8] focus:outline-none"
                 >
                   <option value="Radiología e Imagen Diagnóstica">
                     Radiología e Imagen Diagnóstica
@@ -247,7 +247,7 @@ export function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="correo@ejemplo.mx"
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-teal-600 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm focus:border-[#3B5CA8] focus:outline-none"
               />
             </div>
 
@@ -262,7 +262,7 @@ export function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Mínimo 8 caracteres"
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-teal-600 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm focus:border-[#3B5CA8] focus:outline-none"
               />
             </div>
           </div>
@@ -270,7 +270,7 @@ export function RegisterPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800 disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3B5CA8] px-5 py-3 text-sm font-bold text-white shadow-xs transition hover:bg-[#5A75BC] disabled:opacity-60"
           >
             <CheckCircle2 className="h-4 w-4" />
             {submitting ? 'Registrando cuenta...' : 'Completar Registro e Ingresar'}
@@ -279,7 +279,7 @@ export function RegisterPage() {
 
         <p className="mt-5 text-center text-xs text-slate-600">
           ¿Ya tiene una cuenta registrada?{' '}
-          <Link to="/acceso" className="font-bold text-teal-700 hover:underline">
+          <Link to="/acceso" className="font-bold text-[#3B5CA8] hover:underline">
             Iniciar sesión aquí
           </Link>
         </p>

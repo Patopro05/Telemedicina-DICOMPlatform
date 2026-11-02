@@ -96,9 +96,9 @@ export function DicomGuidePage() {
     <div className="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="max-w-3xl space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800">
+        <div className="inline-flex items-center gap-2 rounded-full bg-[#517327]/10 px-3.5 py-1 text-xs font-bold text-[#517327]">
           <Activity className="h-3.5 w-3.5" />
-          Fundamento Técnico en Telemedicina
+          Fundamento Técnico en Telemedicina · ImaRis
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
           Estándar DICOM y Arquitectura de Seguridad Médica
@@ -111,20 +111,20 @@ export function DicomGuidePage() {
       </div>
 
       {/* Interactive Modality Tabs */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
         <h2 className="text-lg font-bold text-slate-900">
-          Modalidades de Imagen Médica Soportadas
+          Modalidades de Imagen Médica Soportadas en ImaRis
         </h2>
-        <div className="mt-4 flex flex-wrap gap-2 border-b border-slate-200 pb-4">
+        <div className="mt-4 flex flex-wrap gap-2 border-b border-stone-200 pb-4">
           {MODALITIES.map((m) => (
             <button
               key={m.code}
               type="button"
               onClick={() => setSelectedCode(m.code)}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              className={`rounded-xl px-4 py-2 text-xs font-bold transition ${
                 selectedCode === m.code
-                  ? 'bg-teal-700 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#517327] text-white shadow-xs'
+                  : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
               }`}
             >
               {m.code} — {m.title.split('(')[0].trim()}
@@ -136,13 +136,13 @@ export function DicomGuidePage() {
           <div className="space-y-4 lg:col-span-8">
             <h3 className="text-xl font-bold text-slate-900">{current.title}</h3>
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-xl bg-slate-50 p-3.5">
+              <div className="rounded-xl bg-stone-50 p-3.5">
                 <div className="text-xs font-semibold text-slate-500 uppercase">
                   Profundidad Radiométrica
                 </div>
                 <div className="mt-1 text-sm font-semibold text-slate-900">{current.bitDepth}</div>
               </div>
-              <div className="rounded-xl bg-slate-50 p-3.5">
+              <div className="rounded-xl bg-stone-50 p-3.5">
                 <div className="text-xs font-semibold text-slate-500 uppercase">
                   Dimensiones / Volumen
                 </div>
@@ -166,7 +166,7 @@ export function DicomGuidePage() {
           </div>
 
           <div className="rounded-xl border border-slate-800 bg-slate-950 p-5 text-slate-100 lg:col-span-4">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-teal-400 uppercase">
+            <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#a6cc72] uppercase">
               <FileCode2 className="h-4 w-4" />
               Etiquetas Críticas (Grupo, Elemento)
             </div>
@@ -190,8 +190,8 @@ export function DicomGuidePage() {
 
       {/* Why DICOM in Transmission & Storage */}
       <section className="grid gap-6 md:grid-cols-3">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <Layers className="h-7 w-7 text-teal-700" />
+        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+          <Layers className="h-7 w-7 text-[#517327]" />
           <h3 className="mt-3 text-base font-bold text-slate-900">
             Jerarquía Paciente - Estudio - Serie - Instancia
           </h3>
@@ -202,20 +202,20 @@ export function DicomGuidePage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <Network className="h-7 w-7 text-sky-700" />
+        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+          <Network className="h-7 w-7 text-[#3B5CA8]" />
           <h3 className="mt-3 text-base font-bold text-slate-900">
             Interoperabilidad PACS y Estaciones Clínicas
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Los objetos <code>.dcm</code> descargados desde nuestra plataforma cumplen con NEMA
+            Los objetos <code>.dcm</code> descargados desde ImaRis cumplen con NEMA
             PS3.10 (<em>Explicit VR Little Endian</em>), permitiendo abrirlos en 3D Slicer, Horos,
             OsiriX o RadiAnt sin conversión.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <Database className="h-7 w-7 text-indigo-700" />
+        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+          <Database className="h-7 w-7 text-[#617E3C]" />
           <h3 className="mt-3 text-base font-bold text-slate-900">
             Integridad Binaria Verificada (SHA-256)
           </h3>
@@ -227,9 +227,9 @@ export function DicomGuidePage() {
         </div>
       </section>
 
-      {/* Security & Privacy Architecture Section (Instruction 3) */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-teal-700 uppercase">
+      {/* Security & Privacy Architecture Section */}
+      <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs sm:p-8">
+        <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#517327] uppercase">
           <Lock className="h-4 w-4" />
           Arquitectura de Privacidad, Cifrado y Permisos de Acceso
         </div>
@@ -238,14 +238,14 @@ export function DicomGuidePage() {
         </h2>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-5">
-            <div className="flex items-center gap-2 text-sm font-bold text-emerald-900">
-              <KeyRound className="h-4 w-4 text-emerald-700" />
-              Controles Activos en Producción (Sin Costo Adicional)
+          <div className="rounded-xl border border-[#517327]/30 bg-[#517327]/5 p-5">
+            <div className="flex items-center gap-2 text-sm font-bold text-[#517327]">
+              <KeyRound className="h-4 w-4 text-[#517327]" />
+              Controles Activos en Producción ImaRis (Sin Costo Adicional)
             </div>
             <ul className="mt-3 space-y-2.5 text-xs leading-relaxed text-slate-700">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#517327]" />
                 <span>
                   <strong>Cifrado en Tránsito TLS 1.3 (HTTPS):</strong> Toda transferencia de
                   archivos DICOM y credenciales viaja cifrada extremo a extremo en la red global de
@@ -253,7 +253,7 @@ export function DicomGuidePage() {
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#517327]" />
                 <span>
                   <strong>Derivación de Contraseñas PBKDF2-SHA256:</strong> 100,000 iteraciones con
                   sal criptográfica aleatoria de 128 bits y cookies de sesión{' '}
@@ -261,7 +261,7 @@ export function DicomGuidePage() {
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#517327]" />
                 <span>
                   <strong>Control de Acceso Basado en Roles (RBAC):</strong> Segregación estricta en
                   el servidor que restringe la carga a Pacientes/Clínicas y reserva la bandeja global
@@ -269,7 +269,7 @@ export function DicomGuidePage() {
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#517327]" />
                 <span>
                   <strong>Anonimización Cliente DICOM PS3.15:</strong> Opción en el navegador para
                   depurar etiquetas identificables <code>(0010,0010)</code> y{' '}
@@ -279,9 +279,9 @@ export function DicomGuidePage() {
             </ul>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
+          <div className="rounded-xl border border-stone-200 bg-stone-50 p-5">
             <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
-              <ShieldAlert className="h-4 w-4 text-amber-600" />
+              <ShieldAlert className="h-4 w-4 text-[#9C3B47]" />
               Escalamiento Hospitalario Regulado (Servicios Empresariales con Costo)
             </div>
             <p className="mt-2 text-xs leading-relaxed text-slate-600">

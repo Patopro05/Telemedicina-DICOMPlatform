@@ -1,5 +1,4 @@
 import {
-  Activity,
   ArrowRight,
   Building2,
   CheckCircle2,
@@ -24,21 +23,21 @@ export function LandingPage() {
     : '/acceso';
 
   return (
-    <div className="space-y-20 pb-20">
+    <div className="space-y-16 pb-20">
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-teal-950 via-slate-900 to-slate-900 py-20 text-white">
+      <section className="relative overflow-hidden border-b border-stone-200 bg-gradient-to-b from-[#223110] via-[#151e0a] to-slate-950 py-16 text-white sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-12">
             <div className="space-y-6 lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-3.5 py-1 text-xs font-semibold text-teal-300">
-                <Activity className="h-3.5 w-3.5" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#617E3C]/40 bg-[#517327]/25 px-3.5 py-1 text-xs font-semibold text-[#a6cc72]">
+                <img src="/imaris_heart.svg" alt="Heart Icon" className="h-4 w-4 object-contain inline" />
                 Estándar Internacional ISO 12052 / NEMA PS3 (DICOM)
               </div>
               <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:leading-[1.15]">
-                Plataforma Web de Teleradiología y Diagnóstico Remoto{' '}
-                <span className="text-teal-400">DICOM</span>
+                Plataforma Web de Teleradiología{' '}
+                <span className="text-[#a6cc72]">ImaRis</span>
               </h1>
-              <p className="max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="max-w-2xl text-base leading-relaxed text-stone-300 sm:text-lg">
                 Intercambio clínico sin pérdida de estudios de Tomografía Axial Computarizada (TAC),
                 Resonancia Magnética (RM) y Radiografía Digital entre pacientes, unidades
                 hospitalarias y médicos especialistas para emisión oportuna de diagnósticos a
@@ -48,7 +47,7 @@ export function LandingPage() {
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link
                   to={primaryActionLink}
-                  className="inline-flex items-center gap-2 rounded-xl bg-teal-500 px-6 py-3.5 text-sm font-bold text-slate-950 shadow-lg shadow-teal-500/20 transition hover:bg-teal-400"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#3B5CA8] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#3B5CA8]/25 transition hover:bg-[#5A75BC]"
                 >
                   {user ? 'Ir a mi Panel Clínico' : 'Acceder a la Plataforma'}
                   <ArrowRight className="h-4 w-4" />
@@ -56,72 +55,74 @@ export function LandingPage() {
                 {!user && (
                   <Link
                     to="/registro"
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                    className="inline-flex items-center gap-2 rounded-xl border border-stone-700 bg-stone-900/80 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-stone-800"
                   >
                     Registrar Usuario / Unidad Médica
                   </Link>
                 )}
                 <Link
                   to="/guia-dicom"
-                  className="inline-flex items-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-teal-300 hover:text-teal-200"
+                  className="inline-flex items-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold text-[#a6cc72] hover:text-white"
                 >
                   Explorar Modalidades DICOM
                 </Link>
               </div>
             </div>
 
-            {/* Workflow Summary Card */}
+            {/* Visual Brand & Workflow Card */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/90 p-6 shadow-2xl">
-                <div className="mb-4 flex items-center justify-between border-b border-slate-800 pb-3">
-                  <span className="text-xs font-bold tracking-wider text-teal-400 uppercase">
-                    Flujo Clínico de Telemedicina
-                  </span>
-                  <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
-                    Verificación SHA-256
+              <div className="rounded-2xl border border-stone-800 bg-stone-900/90 p-6 shadow-2xl">
+                <div className="mb-4 flex items-center justify-between border-b border-stone-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <img src="/imaris_heart.svg" alt="ImaRis Icon" className="h-6 w-6 object-contain" />
+                    <span className="text-xs font-bold tracking-wider text-[#a6cc72] uppercase">
+                      Flujo Clínico ImaRis
+                    </span>
+                  </div>
+                  <span className="rounded bg-[#517327]/25 px-2 py-0.5 text-[11px] font-semibold text-[#a6cc72]">
+                    Integridad SHA-256
                   </span>
                 </div>
                 <ol className="space-y-4">
                   <li className="flex gap-3.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-500/20 text-teal-300">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#517327]/25 text-[#a6cc72]">
                       <Upload className="h-4 w-4" />
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-white">
                         1. Carga de Estudios (.dcm)
                       </div>
-                      <p className="text-xs leading-relaxed text-slate-400">
+                      <p className="text-xs leading-relaxed text-stone-400">
                         Pacientes, clínicas y hospitales suben archivos DICOM individuales o series
                         multicorte con validación de cabecera y anonimización opcional PS3.15.
                       </p>
                     </div>
                   </li>
                   <li className="flex gap-3.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-500/20 text-sky-300">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#3B5CA8]/25 text-[#8aa5e8]">
                       <Download className="h-4 w-4" />
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-white">
                         2. Consulta y Descarga para Especialistas
                       </div>
-                      <p className="text-xs leading-relaxed text-slate-400">
+                      <p className="text-xs leading-relaxed text-stone-400">
                         El especialista descarga los objetos binarios originales (.dcm o paquete
                         .zip) o inspecciona Unidades Hounsfield directamente en el visor web 16-bit.
                       </p>
                     </div>
                   </li>
                   <li className="flex gap-3.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-300">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#617E3C]/25 text-[#a6cc72]">
                       <FileCheck2 className="h-4 w-4" />
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-white">
                         3. Dictamen Diagnóstico Remoto
                       </div>
-                      <p className="text-xs leading-relaxed text-slate-400">
+                      <p className="text-xs leading-relaxed text-stone-400">
                         Emisión estructurada de hallazgos, impresión diagnóstica y recomendaciones
-                        firmadas con cédula profesional, disponibles al instante para consulta e
-                        impresión.
+                        firmadas con cédula profesional, disponibles para descarga en PDF.
                       </p>
                     </div>
                   </li>
@@ -145,8 +146,8 @@ export function LandingPage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+            <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#517327]/10 text-[#517327]">
               <UserCheck className="h-6 w-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900">Pacientes y Usuarios</h3>
@@ -156,22 +157,22 @@ export function LandingPage() {
             </p>
             <ul className="mt-4 space-y-2 text-xs text-slate-600">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
+                <CheckCircle2 className="h-4 w-4 text-[#517327]" />
                 Pestaña exclusiva de carga de archivos .dcm
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
+                <CheckCircle2 className="h-4 w-4 text-[#517327]" />
                 Opción de anonimización de metadatos personales
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
-                Consulta e impresión de reporte médico firmado
+                <CheckCircle2 className="h-4 w-4 text-[#517327]" />
+                Descarga de dictamen médico en PDF
               </li>
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-700">
+          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+            <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#617E3C]/10 text-[#617E3C]">
               <Building2 className="h-6 w-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900">Clínicas y Hospitales</h3>
@@ -181,22 +182,22 @@ export function LandingPage() {
             </p>
             <ul className="mt-4 space-y-2 text-xs text-slate-600">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-sky-600" />
+                <CheckCircle2 className="h-4 w-4 text-[#617E3C]" />
                 Registro institucional con clave sanitaria / CLUES
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-sky-600" />
+                <CheckCircle2 className="h-4 w-4 text-[#617E3C]" />
                 Carga de series multicorte TAC y Resonancia Magnética
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-sky-600" />
+                <CheckCircle2 className="h-4 w-4 text-[#617E3C]" />
                 Vinculación automática con el expediente del paciente
               </li>
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
+          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+            <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#3B5CA8]/10 text-[#3B5CA8]">
               <Stethoscope className="h-6 w-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900">Médicos Especialistas</h3>
@@ -206,16 +207,16 @@ export function LandingPage() {
             </p>
             <ul className="mt-4 space-y-2 text-xs text-slate-600">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-indigo-600" />
+                <CheckCircle2 className="h-4 w-4 text-[#3B5CA8]" />
                 Pestaña de descarga directa (.dcm individual o .zip)
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-indigo-600" />
+                <CheckCircle2 className="h-4 w-4 text-[#3B5CA8]" />
                 Ajuste de ventanas HU (Pulmón, Hueso, Cerebro)
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-indigo-600" />
-                Emisión y actualización de dictámenes diagnósticos
+                <CheckCircle2 className="h-4 w-4 text-[#3B5CA8]" />
+                Emisión y exportación de dictámenes diagnósticos en PDF
               </li>
             </ul>
           </div>
@@ -224,10 +225,10 @@ export function LandingPage() {
 
       {/* Security & Integrity Banner */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-teal-200 bg-gradient-to-r from-teal-50 to-slate-50 p-8">
+        <div className="rounded-2xl border border-[#617E3C]/30 bg-gradient-to-r from-[#517327]/10 via-[#617E3C]/5 to-slate-50 p-8">
           <div className="grid items-center gap-6 md:grid-cols-12">
             <div className="md:col-span-8">
-              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-wide text-teal-800 uppercase">
+              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-wide text-[#517327] uppercase">
                 <ShieldCheck className="h-4 w-4" />
                 Integridad Diagnóstica y Protección de Datos
               </div>
@@ -236,7 +237,7 @@ export function LandingPage() {
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 A diferencia de imágenes comprimidas convencionales (JPEG/PNG) que descartan rango
-                dinámico, esta plataforma conserva el flujo binario DICOM de 12 y 16 bits intacto,
+                dinámico, ImaRis conserva el flujo binario DICOM de 12 y 16 bits intacto,
                 verificando cada carga y descarga con huellas criptográficas SHA-256 bajo transporte
                 cifrado HTTPS/TLS 1.3 y sesiones protegidas PBKDF2-SHA256.
               </p>
@@ -244,7 +245,7 @@ export function LandingPage() {
             <div className="flex md:col-span-4 md:justify-end">
               <Link
                 to="/guia-dicom"
-                className="inline-flex items-center gap-2 rounded-xl border border-teal-700 bg-white px-5 py-3 text-sm font-semibold text-teal-800 shadow-sm transition hover:bg-teal-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-[#517327] bg-white px-5 py-3 text-sm font-semibold text-[#517327] shadow-xs transition hover:bg-[#517327]/10"
               >
                 <Lock className="h-4 w-4" />
                 Ver Revisión Técnica DICOM

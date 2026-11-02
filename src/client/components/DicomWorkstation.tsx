@@ -269,7 +269,7 @@ export function DicomWorkstation({
             onClick={() => setDragTool('wl')}
             className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${
               dragTool === 'wl'
-                ? 'bg-teal-600 text-white'
+                ? 'bg-[#3B5CA8] text-white'
                 : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
             title="Arrastre con el ratón para ajustar Centro y Ancho de Ventana"
@@ -283,7 +283,7 @@ export function DicomWorkstation({
             onClick={() => setDragTool('pan')}
             className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${
               dragTool === 'pan'
-                ? 'bg-teal-600 text-white'
+                ? 'bg-[#3B5CA8] text-white'
                 : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
             title="Arrastre con el ratón para desplazar la imagen"
@@ -349,7 +349,7 @@ export function DicomWorkstation({
                   setWindowCenter(preset.wc);
                   setWindowWidth(preset.ww);
                 }}
-                className="rounded-md border border-slate-700 bg-slate-800/90 px-2 py-1 text-[11px] font-medium text-teal-300 hover:border-teal-500 hover:bg-slate-800"
+                className="rounded-md border border-[#517327]/60 bg-[#517327]/20 px-2 py-1 text-[11px] font-semibold text-[#a6cc72] hover:bg-[#517327]/30"
               >
                 {preset.label}
               </button>
@@ -360,7 +360,7 @@ export function DicomWorkstation({
             onClick={() => setShowTags((s) => !s)}
             className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${
               showTags
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-[#617E3C] text-white'
                 : 'border border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700'
             }`}
           >

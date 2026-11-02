@@ -284,5 +284,56 @@ describe('End-to-End Clinical API, RBAC & Lossless DICOM Storage', () => {
     };
     expect(mariaStudy.status).toBe('diagnosed');
     expect(mariaStudy.report?.impression).toContain('Lung-RADS 4A');
+
+    // 11. DICOMweb Interoperability: QIDO-RS, STOW-RS, and WADO-RS
+    // 11a. QIDO-RS: Query studies
+    const qidoRes = await app.request('http://localhost/api/dicomweb/studies', {}, env);
+    expect(qidoRes.status).toBe(200);
+    expect(qidoRes.headers.get('content-type')).toContain('application/dicom+json');
+    const qidoStudies = (await qidoRes.json()) as Array<Record<string, unknown>>;
+    expect(qidoStudies.length).toBeGreaterThan(0);
+
+    // 11b. STOW-RS: Store a new synthetic CT slice via direct DICOMweb POST
+    const ctSample = generateChestCtDicom(2);
+    const dicomwebCtBytes = ctSample.bytes;
+    const dicomwebCtChecksum = await sha256Hex(dicomwebCtBytes);
+    const stowBodyBuf = dicomwebCtBytes.buffer.slice(
+      dicomwebCtBytes.byteOffset,
+      dicomwebCtBytes.byteOffset + dicomwebCtBytes.byteLength
+    ) as ArrayBuffer;
+
+    const stowRes = await app.request(
+      'http://localhost/api/dicomweb/studies',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/dicom',
+        },
+        body: stowBodyBuf,
+      },
+      env
+    );
+    expect(stowRes.status).toBe(201);
+    const stowBody = (await stowRes.json()) as {
+      studyInstanceUid: string;
+      seriesInstanceUid: string;
+      sopInstanceUid: string;
+      retrieveUrl: string;
+    };
+    expect(stowBody.studyInstanceUid).toBeDefined();
+    expect(stowBody.sopInstanceUid).toBeDefined();
+
+    // 11c. WADO-RS: Retrieve the exact binary instance and confirm lossless byte-for-byte SHA-256 integrity
+    const wadoRes = await app.request(
+      `http://localhost${stowBody.retrieveUrl}`,
+      {},
+      env
+    );
+    expect(wadoRes.status).toBe(200);
+    expect(wadoRes.headers.get('content-type')).toBe('application/dicom');
+    const retrievedWadoBytes = new Uint8Array(await wadoRes.arrayBuffer());
+    const retrievedWadoChecksum = await sha256Hex(retrievedWadoBytes);
+    expect(retrievedWadoChecksum).toBe(dicomwebCtChecksum);
+    expect(retrievedWadoBytes.byteLength).toBe(dicomwebCtBytes.byteLength);
   });
 });
